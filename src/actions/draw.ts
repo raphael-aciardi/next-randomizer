@@ -1,5 +1,6 @@
 'use server';
 
+
 import { cookies } from "next/headers";
 import { z } from "zod";
 
@@ -32,3 +33,9 @@ export async function getList() {
     return currentList as [{name: string, usernameGithub: string}]
 }
 
+export async function removePerson(name: string) {
+    const cookieStore = await cookies()
+    const currentList = JSON.parse(cookieStore.get('listPeople')?.value ?? '[]')
+    const newList = currentList.filter((person: { name: string }) => person.name !== name)
+    cookieStore.set('listPeople', JSON.stringify(newList))
+}
