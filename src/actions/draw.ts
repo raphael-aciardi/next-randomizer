@@ -4,6 +4,12 @@
 import { cookies } from "next/headers";
 import { z } from "zod";
 
+type Person = {
+    id: string,
+    name: string,
+    usernameGithub: string
+}
+
 export async function drawAction(data: FormData) {
     const schema = z.object({
         name: z.string().trim().min(3, 'O nome precisa ter pelo menos 3 caracteres'),
@@ -17,10 +23,11 @@ export async function drawAction(data: FormData) {
     }
 
     const { name, usernameGithub } = parsed.data
+    const person = { id: Math.random() * Date.now(), name, usernameGithub };
 
     const cookieStore = await cookies()
     const currentList = JSON.parse(cookieStore.get('listPeople')?.value ?? '[]')
-    const newList = [...currentList, { name, usernameGithub }]
+    const newList = [...currentList, person]
     
     cookieStore.set('listPeople', JSON.stringify(newList))
 
@@ -30,12 +37,12 @@ export async function drawAction(data: FormData) {
 export async function getList() {
     const cookieStore = await cookies()
     const currentList = JSON.parse(cookieStore.get('listPeople')?.value ?? '[]')
-    return currentList as [{name: string, usernameGithub: string}]
+    return currentList as Person[]
 }
 
-export async function removePerson(name: string) {
+export async function removePerson(id: string) {
     const cookieStore = await cookies()
-    const currentList = JSON.parse(cookieStore.get('listPeople')?.value ?? '[]')
-    const newList = currentList.filter((person: { name: string }) => person.name !== name)
+    const currentList = JSON.parse(cookieStore.get('listPeople')?.value ?? '[]') as Person[]
+    const newList = currentList.filter((person) => person.id !== id)
     cookieStore.set('listPeople', JSON.stringify(newList))
 }

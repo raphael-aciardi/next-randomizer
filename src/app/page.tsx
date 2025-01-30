@@ -34,7 +34,7 @@ export default async function Home() {
                                         <span className="font-medium">{person.name}</span>
                                     </TableCell>
                                     <TableCell>
-                                        <RemovePersonButton name={person.name} />
+                                        <RemovePersonButton id={person.id} />
                                     </TableCell>
                                 </TableRow>
                             )) : <TableRow>
