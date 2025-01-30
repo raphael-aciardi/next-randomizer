@@ -1,7 +1,10 @@
 import { getList } from "@/actions/draw";
+import EditPersonButton from "@/components/edit-person-button";
+import LuckButton from "@/components/luck-button";
 import ParticipantRegistrationForm from "@/components/participant-registration-form";
 import RemovePersonButton from "@/components/remove-person-Button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Image from "next/image";
 
@@ -16,7 +19,7 @@ export default async function Home() {
                 </CardContent>
             </Card>
             <Card>
-                <CardContent className="pt-5 w-full">
+                <CardContent className="pt-5 w-full flex flex-col items-center">
                     <Table className="">
                         <TableHeader>
                             <TableRow>
@@ -34,16 +37,20 @@ export default async function Home() {
                                         <span className="font-medium">{person.name}</span>
                                     </TableCell>
                                     <TableCell>
-                                        <RemovePersonButton name={person.name} />
+                                        <div className="flex gap-3 items-center">
+                                            <RemovePersonButton name={person.name} />
+                                            <EditPersonButton name={person.name} />
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             )) : <TableRow>
                                 <TableCell colSpan={2} className="text-center opacity-70 pt-8">Nenhum participante cadastrado</TableCell>
 
                             </TableRow>}
-
                         </TableBody>
                     </Table>
+                    <Separator />
+                    <LuckButton  />
                 </CardContent>
             </Card>
         </div>
