@@ -4,12 +4,12 @@ import { removePerson } from "@/actions/draw"
 import { Button } from "./ui/button"
 import { Trash } from "lucide-react";
 interface RemovePersonButtonProps {
-  name: string; 
+  id: string; 
 }
 
-export default function RemovePersonButton({ name }: RemovePersonButtonProps) {
+export default function RemovePersonButton({ id }: RemovePersonButtonProps) {
   async function handleRemovePerson() {
-    await removePerson(name)
+    await removePerson(id)
   }
 
   return (

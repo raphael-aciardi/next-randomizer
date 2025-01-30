@@ -37,10 +37,7 @@ export default async function Home() {
                                         <span className="font-medium">{person.name}</span>
                                     </TableCell>
                                     <TableCell>
-                                        <div className="flex gap-3 items-center">
-                                            <RemovePersonButton name={person.name} />
-                                            <EditPersonButton name={person.name} />
-                                        </div>
+                                        <RemovePersonButton id={person.id} />
                                     </TableCell>
                                 </TableRow>
                             )) : <TableRow>
