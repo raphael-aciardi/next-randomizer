@@ -1,18 +1,27 @@
 'use client'
 
-import { removePerson } from "@/actions/draw"
+import { editPerson, removePerson } from "@/actions/draw"
 import { Button } from "./ui/button"
-import { Trash } from "lucide-react";
-interface RemovePersonButtonProps {
-  id: string; 
+import { Pencil, Trash } from "lucide-react";
+interface ActionsPersonButtonProps {
+  id: string;
 }
 
-export default function RemovePersonButton({ id }: RemovePersonButtonProps) {
+export default function ActionsPersonButton({ id }: ActionsPersonButtonProps) {
   async function handleRemovePerson() {
     await removePerson(id)
   }
 
+  async function handleEditPerson() {
+    const updatedList = await editPerson(id); 
+    console.log(updatedList);
+  }
+  
+
   return (
-    <Button onClick={handleRemovePerson} className="bg-red-500 hover:bg-red-400"> Remover <Trash /> </Button>
+    <div>
+      <Button onClick={handleRemovePerson} className="bg-red-500 hover:bg-red-400"> Remover <Trash /> </Button>
+      <Button onClick={handleEditPerson}> Editar <Pencil /> </Button>
+    </div>
   )
 }

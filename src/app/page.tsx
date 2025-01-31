@@ -1,8 +1,7 @@
 import { getList } from "@/actions/draw";
-import EditPersonButton from "@/components/edit-person-button";
 import LuckButton from "@/components/luck-button";
 import ParticipantRegistrationForm from "@/components/participant-registration-form";
-import RemovePersonButton from "@/components/remove-person-Button";
+import ActionsPersonButton from "@/components/remove-person-Button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -37,7 +36,7 @@ export default async function Home() {
                                         <span className="font-medium">{person.name}</span>
                                     </TableCell>
                                     <TableCell>
-                                        <RemovePersonButton id={person.id} />
+                                        <ActionsPersonButton id={person.id} />
                                     </TableCell>
                                 </TableRow>
                             )) : <TableRow>
