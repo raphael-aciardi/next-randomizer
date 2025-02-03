@@ -1,4 +1,4 @@
-import { getList } from "@/actions/draw";
+import { getEditedPersonOnCookie, getList } from "@/actions/draw";
 import LuckButton from "@/components/luck-button";
 import ParticipantRegistrationForm from "@/components/participant-registration-form";
 import ActionsPersonButton from "@/components/remove-person-Button";
@@ -9,12 +9,13 @@ import Image from "next/image";
 
 export default async function Home() {
     const people = await getList();
+    const editedPerson = await getEditedPersonOnCookie();
 
     return (
         <div className="top-40 relative flex flex-col gap-5 ">
             <Card>
                 <CardContent className="pt-5">
-                    <ParticipantRegistrationForm />
+                    <ParticipantRegistrationForm editedPerson={editedPerson} />
                 </CardContent>
             </Card>
             <Card>

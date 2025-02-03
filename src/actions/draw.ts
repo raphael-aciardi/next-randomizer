@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { z } from "zod";
 
-type Person = {
+export type Person = {
   id: string;
   name: string ;
   usernameGithub: string;
@@ -31,11 +31,21 @@ export async function drawAction(data: FormData) {
   const person = { id: Math.random() * Date.now(), name, usernameGithub };
 
   const cookieStore = await cookies();
-  const currentList = JSON.parse(cookieStore.get("listPeople")?.value ?? "[]");
-  const newList = [...currentList, person];
 
-  cookieStore.set("listPeople", JSON.stringify(newList));
+  const editedPerson = JSON.parse(cookieStore.get("editedPerson")?.value ?? '') as Person | null;
 
+  if(editedPerson) {
+    const currentList = JSON.parse(cookieStore.get("listPeople")?.value ?? "[]");
+    currentList.find((person) => person.id === editedPerson.id)?.name = name;
+
+  } else {
+    const currentList = JSON.parse(cookieStore.get("listPeople")?.value ?? "[]");
+    const newList = [...currentList, person];
+    
+    cookieStore.set("listPeople", JSON.stringify(newList));
+  }
+  
+  cookieStore.delete("editedPerson");
   return { success: true, errors: null };
 }
 
@@ -54,13 +64,34 @@ export async function removePerson(id: string) {
   cookieStore.set("listPeople", JSON.stringify(newList));
 }
 
+export async function setEditedPersonOnCookie(id: string) {
+  const cookieStore = await cookies();
+  const currentList = JSON.parse(
+    cookieStore.get("listPeople")?.value ?? "[]"
+  ) as Person[];
+  const person = currentList.find((person) =>  (person.id === id)) as Person;
+  
+  cookieStore.set("editedPerson", JSON.stringify(person));
+}
+
+export async function getEditedPersonOnCookie() {
+  const cookieStore = await cookies();
+  const editedPerson = cookieStore.get("editedPerson");
+  
+  if(!editedPerson) return null;
+  
+  const person = JSON.parse(editedPerson.value) as Person
+  
+  return person
+}
+
 export async function editPerson(id: string, data: FormData) {
   const cookieStore = await cookies();
   const currentList = JSON.parse(
     cookieStore.get("listPeople")?.value ?? "[]"
   ) as Person[];
   const person = currentList.find((person) =>  (person.id === id)) as Person;
-  person.name? = data.get("name");
+  person.name = data.get("name") as string;
   person.usernameGithub = data.get("usernameGithub") as string;
   return person
 }
