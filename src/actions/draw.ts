@@ -32,10 +32,10 @@ export async function drawAction(data: FormData) {
       person.id === editedPerson.id ? { ...person, name, usernameGithub } : person
     );
 
-    cookieStore.set("listPeople", JSON.stringify(updatedList));
+    cookieStore.set("listPeople", JSON.stringify(updatedList), {maxAge: 5*365*24*60*60});
   } else {
     const newPerson: Person = { id: Date.now().toString(), name, usernameGithub };
-    cookieStore.set("listPeople", JSON.stringify([...currentList, newPerson]));
+    cookieStore.set("listPeople", JSON.stringify([...currentList, newPerson]), {maxAge: 5*365*24*60*60});
   }
 
   cookieStore.delete("editedPerson");
@@ -54,7 +54,7 @@ export async function removePerson(id: string) {
     cookieStore.get("listPeople")?.value ?? "[]"
   ) as Person[];
   const newList = currentList.filter((person) => person.id !== id);
-  cookieStore.set("listPeople", JSON.stringify(newList));
+  cookieStore.set("listPeople", JSON.stringify(newList), {maxAge: 5*365*24*60*60});
 }
 
 export async function setEditedPersonIdOnCookie(id: string) {
