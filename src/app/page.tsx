@@ -42,7 +42,7 @@ export default async function Home() {
                                     </TableCell>
                                 </TableRow>
                             )) : <TableRow>
-                                <TableCell colSpan={2} className="text-center opacity-70 pt-8">Nenhum participante cadastrado</TableCell>
+                                <TableCell colSpan={3} className="text-center opacity-70 pt-8">Nenhum participante cadastrado</TableCell>
 
                             </TableRow>}
                         </TableBody>

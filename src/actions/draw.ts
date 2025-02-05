@@ -82,5 +82,14 @@ export async function getEditedPersonOnCookie() {
   return person
 }
 
+export async function drawPersonRandomly() {
+  const cookieStore = await cookies();
+  const currentList = JSON.parse(
+    cookieStore.get("listPeople")?.value ?? "[]"
+  ) as Person[];
+  const randomList = currentList.sort(() => Math.random() - 0.5);
+  cookieStore.set("listPeople", JSON.stringify(randomList));
+}
+
 
 
