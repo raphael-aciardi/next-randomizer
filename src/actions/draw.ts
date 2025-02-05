@@ -5,7 +5,7 @@ import { z } from "zod";
 
 export type Person = {
   id: string;
-  name: string ;
+  name: string;
   usernameGithub: string;
 };
 
@@ -27,15 +27,13 @@ export async function drawAction(data: FormData) {
   const editedPerson = await getEditedPersonOnCookie();
   const currentList: Person[] = JSON.parse(cookieStore.get("listPeople")?.value ?? "[]");
 
-  if (editedPerson) {
-    // Atualiza o usuário existente
-    const updatedList = currentList.map((person) => 
+  if (editedPerson !== null) {
+    const updatedList = currentList.map((person) =>
       person.id === editedPerson.id ? { ...person, name, usernameGithub } : person
     );
 
     cookieStore.set("listPeople", JSON.stringify(updatedList));
   } else {
-    // Cria um novo usuário
     const newPerson: Person = { id: Date.now().toString(), name, usernameGithub };
     cookieStore.set("listPeople", JSON.stringify([...currentList, newPerson]));
   }
@@ -59,37 +57,30 @@ export async function removePerson(id: string) {
   cookieStore.set("listPeople", JSON.stringify(newList));
 }
 
-export async function setEditedPersonOnCookie(id: string) {
+export async function setEditedPersonIdOnCookie(id: string) {
   const cookieStore = await cookies();
-  const currentList = JSON.parse(
-    cookieStore.get("listPeople")?.value ?? "[]"
-  ) as Person[];
-  const person = currentList.find((person) =>  (person.id === id)) as Person;
-  
-  cookieStore.set("editedPerson", JSON.stringify(person));
+  cookieStore.set("editedPerson", JSON.stringify(id));
 }
 
 export async function getEditedPersonOnCookie() {
   const cookieStore = await cookies();
-  const editedPerson = cookieStore.get("editedPerson");
+  let editedPersonId = cookieStore.get("editedPerson")?.value as string | undefined;
+
+  if (!editedPersonId) return null;
+
+  editedPersonId = JSON.parse(editedPersonId) as string;
+
   const currentList = JSON.parse(
     cookieStore.get("listPeople")?.value ?? "[]"
   ) as Person[];
-  const person = currentList.find((person: Person) => person.id === editedPerson?.value) as Person;
+  const person = currentList.find((person: Person) => person.id === editedPersonId) as Person;
+
   if (person === undefined) {
     return null
   }
+
   return person
-} 
-export async function editPerson(id: string, data: FormData) {
-  const cookieStore = await cookies();
-  const currentList: Person[] = JSON.parse(cookieStore.get("listPeople")?.value ?? "[]");
-
-  const updatedList = currentList.map((person) => 
-    person.id === id
-      ? { ...person, name: data.get("name") as string, usernameGithub: data.get("usernameGithub") as string }
-      : person
-  );
-
-  cookieStore.set("listPeople", JSON.stringify(updatedList));
 }
+
+
+

@@ -11,21 +11,22 @@ export default async function Home() {
     const people = await getList();
     const editedPerson = await getEditedPersonOnCookie();
 
+
     return (
-        <div className="top-40 relative flex flex-col gap-5 ">
+        <div className="top-40 relative flex flex-col gap-5">
             <Card>
                 <CardContent className="pt-5">
                     <ParticipantRegistrationForm editedPerson={editedPerson} />
                 </CardContent>
             </Card>
-            <Card>
+            <Card className="mb-10">
                 <CardContent className="pt-5 w-full flex flex-col items-center">
-                    <Table className="">
+                    <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Posição</TableHead>
                                 <TableHead>Pessoa</TableHead>
-                                <TableHead>Ações</TableHead>
+                                <TableHead className="text-right">Ações</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -36,7 +37,7 @@ export default async function Home() {
                                         <Image className="h-10 w-10 rounded-sm" src={`https://github.com/${person.usernameGithub}.png`} width={300} height={300} alt="randomly selected" />
                                         <span className="font-medium">{person.name}</span>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-right">
                                         <ActionsPersonButton id={person.id} />
                                     </TableCell>
                                 </TableRow>
@@ -47,7 +48,7 @@ export default async function Home() {
                         </TableBody>
                     </Table>
                     <Separator />
-                    <LuckButton  />
+                    <LuckButton />
                 </CardContent>
             </Card>
         </div>

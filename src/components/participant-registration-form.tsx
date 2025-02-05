@@ -3,7 +3,7 @@
 import { Plus, Save } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { drawAction, Person } from "@/actions/draw";
 
 
@@ -12,8 +12,9 @@ export default function ParticipantRegistrationForm({ editedPerson }: { editedPe
     const [errorName, setErrorName] = useState<string[] | null>(null)
     const [errorGithub, setErrorGithub] = useState<string[] | null>(null)
     const [person, setPerson] = useState(editedPerson);
+    const formRef = useRef<HTMLFormElement>(null); 
 
-    async function handleSubmit(e: FormEvent) {
+    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget as HTMLFormElement);
@@ -27,19 +28,18 @@ export default function ParticipantRegistrationForm({ editedPerson }: { editedPe
         } else {
             setErrorName(null)
             setErrorGithub(null)
+            formRef.current?.reset();
+            setPerson(null)
         }
     }
 
     useEffect(() => {
-        if (editedPerson) {
-            setPerson(editedPerson)
-        }
+        if (editedPerson) setPerson(editedPerson)
     }, [editedPerson])
-
 
     return (
         <div>
-            <form className="flex gap-4 items-end" onSubmit={handleSubmit}>
+            <form className="flex gap-4 items-end" onSubmit={handleSubmit} ref={formRef}>
                 <div className={`flex-1 flex flex-col gap-2 ${errorGithub ? 'border-1 border-red-400 self-start' : ''}`}>
                     <label className="font-semibold" htmlFor="name">Nome</label>
                     <Input placeholder="Nome do participante" id="name" name="name" defaultValue={person?.name} />

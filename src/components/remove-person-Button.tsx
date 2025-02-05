@@ -1,6 +1,6 @@
 'use client'
 
-import { removePerson, setEditedPersonOnCookie } from "@/actions/draw"
+import { removePerson, setEditedPersonIdOnCookie } from "@/actions/draw"
 import { Button } from "./ui/button"
 import { Pencil, Trash } from "lucide-react";
 interface ActionsPersonButtonProps {
@@ -13,14 +13,18 @@ export default function ActionsPersonButton({ id }: ActionsPersonButtonProps) {
   }
 
   async function handleEditPerson() {
-    await setEditedPersonOnCookie(id);
+    await setEditedPersonIdOnCookie(id);
   }
 
 
   return (
-    <div className="space-x-2">
-      <Button onClick={handleRemovePerson} className="bg-red-500 hover:bg-red-400"><Trash /> Remover </Button>
-      <Button onClick={handleEditPerson}><Pencil /> Editar</Button>
+    <div>
+      <Button onClick={handleRemovePerson} variant={"ghost"} size={'icon'}>
+        <Trash className="text-red-500" />
+      </Button>
+      <Button onClick={handleEditPerson} variant={"ghost"} size={'icon'}>
+        <Pencil className="text-primary" />
+      </Button>
     </div>
   )
 }

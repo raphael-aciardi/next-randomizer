@@ -1,9 +1,13 @@
 'use client'
 
+import { Dices } from "lucide-react"
 import { Button } from "./ui/button"
 
 export default function LuckButton() {
+
   return (
-    <Button className="bg-green-500 hover:bg-green-400 min-w-96 w-full mt-5">Sortear</Button>
+    <Button className="bg-green-500 hover:bg-green-400 mt-5">
+      <Dices /> Sortear
+    </Button>
   )
 }
