@@ -11,15 +11,10 @@ export type Person = {
 
 export async function drawAction(data: FormData) {
   const schema = z.object({
-    name: z
-      .string()
-      .trim()
-      .min(3, "O nome precisa ter pelo menos 3 caracteres"),
-    usernameGithub: z
-      .string()
-      .trim()
-      .min(3, "O username precisa ter pelo menos 3 caracteres"),
+    name: z.string().trim().min(3, "O nome precisa ter pelo menos 3 caracteres"),
+    usernameGithub: z.string().trim().min(3, "O username precisa ter pelo menos 3 caracteres"),
   });
+
   const parsed = schema.safeParse(Object.fromEntries(data));
 
   if (!parsed.success) {
@@ -28,23 +23,23 @@ export async function drawAction(data: FormData) {
   }
 
   const { name, usernameGithub } = parsed.data;
-  const person = { id: Math.random() * Date.now(), name, usernameGithub };
-
   const cookieStore = await cookies();
+  const editedPerson = await getEditedPersonOnCookie();
+  const currentList: Person[] = JSON.parse(cookieStore.get("listPeople")?.value ?? "[]");
 
-  const editedPerson = JSON.parse(cookieStore.get("editedPerson")?.value ?? '') as Person | null;
+  if (editedPerson) {
+    // Atualiza o usuário existente
+    const updatedList = currentList.map((person) => 
+      person.id === editedPerson.id ? { ...person, name, usernameGithub } : person
+    );
 
-  if(editedPerson) {
-    const currentList = JSON.parse(cookieStore.get("listPeople")?.value ?? "[]");
-    currentList.find((person) => person.id === editedPerson.id)?.name = name;
-
+    cookieStore.set("listPeople", JSON.stringify(updatedList));
   } else {
-    const currentList = JSON.parse(cookieStore.get("listPeople")?.value ?? "[]");
-    const newList = [...currentList, person];
-    
-    cookieStore.set("listPeople", JSON.stringify(newList));
+    // Cria um novo usuário
+    const newPerson: Person = { id: Date.now().toString(), name, usernameGithub };
+    cookieStore.set("listPeople", JSON.stringify([...currentList, newPerson]));
   }
-  
+
   cookieStore.delete("editedPerson");
   return { success: true, errors: null };
 }
@@ -77,21 +72,24 @@ export async function setEditedPersonOnCookie(id: string) {
 export async function getEditedPersonOnCookie() {
   const cookieStore = await cookies();
   const editedPerson = cookieStore.get("editedPerson");
-  
-  if(!editedPerson) return null;
-  
-  const person = JSON.parse(editedPerson.value) as Person
-  
-  return person
-}
-
-export async function editPerson(id: string, data: FormData) {
-  const cookieStore = await cookies();
   const currentList = JSON.parse(
     cookieStore.get("listPeople")?.value ?? "[]"
   ) as Person[];
-  const person = currentList.find((person) =>  (person.id === id)) as Person;
-  person.name = data.get("name") as string;
-  person.usernameGithub = data.get("usernameGithub") as string;
+  const person = currentList.find((person: Person) => person.id === editedPerson?.value) as Person;
+  if (person === undefined) {
+    return null
+  }
   return person
+} 
+export async function editPerson(id: string, data: FormData) {
+  const cookieStore = await cookies();
+  const currentList: Person[] = JSON.parse(cookieStore.get("listPeople")?.value ?? "[]");
+
+  const updatedList = currentList.map((person) => 
+    person.id === id
+      ? { ...person, name: data.get("name") as string, usernameGithub: data.get("usernameGithub") as string }
+      : person
+  );
+
+  cookieStore.set("listPeople", JSON.stringify(updatedList));
 }
