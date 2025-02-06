@@ -55,7 +55,7 @@ export function DrawResults({ people }: DrawResultsProps) {
                         </TableBody>
                     </Table>
                     <Separator />
-                    {clickButton !== 1 ? (
+                    {clickButton !== 1 && people.length > 0 ? (
                         <Button onClick={handleDrawPersonRandomly} className="bg-green-500 hover:bg-green-400 mt-5">
                             <Dices /> Sortear
                         </Button>
