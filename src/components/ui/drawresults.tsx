@@ -76,7 +76,7 @@ export function DrawResults({ people }: DrawResultsProps) {
                                 <TableRow>
                                     <TableHead>Posição</TableHead>
                                     <TableHead>Pessoa</TableHead>
-                                    <TableHead className="text-right">Ações</TableHead>
+                                 
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -87,9 +87,6 @@ export function DrawResults({ people }: DrawResultsProps) {
                                             <Image className="h-10 w-10 rounded-sm" src={`https://github.com/${person.usernameGithub}.png`} width={300} height={300} alt="randomly selected" />
                                             <span className="font-medium">{person.name}</span>
                                         </TableCell>
-                                        <TableCell className="text-right">
-                                            <ActionsPersonButton id={person.id} />
-                                        </TableCell>
                                     </TableRow>
                                 )) : <TableRow>
                                     <TableCell colSpan={3} className="text-center opacity-70 pt-8">Nenhum participante cadastrado</TableCell>
@@ -97,7 +94,6 @@ export function DrawResults({ people }: DrawResultsProps) {
                             </TableBody>
                         </Table>
                         <Separator />
-
                     </CardContent>
                 </Card>
             ) : null}
