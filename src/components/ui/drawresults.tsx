@@ -9,6 +9,7 @@ import { Separator } from "./separator"
 import { Button } from "./button"
 import { Dices } from "lucide-react"
 import { useState } from "react"
+import { toast } from "sonner"
 
 type DrawResultsProps = {
     people: Person[]
@@ -23,24 +24,28 @@ export function DrawResults({ people }: DrawResultsProps) {
         const drawPerson = await drawPersonRandomly()
         setRandomList(drawPerson)
         setClickButton(1)
+        if (people.length > 1) {
+            toast.success("A ordem dos participantes foi sorteada!")
+        } else {
+            toast.error("É preciso ter pelo menos 2 ou mais participantes para sortear!")
+        }
     }
 
     return (
         <div>
-            <Card className="mb-10">
+            <Card>
                 <CardContent className="pt-5 w-full flex flex-col items-center">
+                    <h1 className="text-2xl font-semibold">Participantes do Sorteio da Daily</h1>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Posição</TableHead>
-                                <TableHead>Pessoa</TableHead>
+                                <TableHead>Participantes</TableHead>
                                 <TableHead className="text-right">Ações</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {people.length > 0 ? people.map((person, index) => (
                                 <TableRow key={`person-${index}-${person.name}`}>
-                                    <TableCell>{index + 1}</TableCell>
                                     <TableCell className="font-medium flex items-center gap-4">
                                         <Image className="h-10 w-10 rounded-sm" src={`https://github.com/${person.usernameGithub}.png`} width={300} height={300} alt="randomly selected" />
                                         <span className="font-medium">{person.name}</span>
@@ -55,16 +60,17 @@ export function DrawResults({ people }: DrawResultsProps) {
                         </TableBody>
                     </Table>
                     <Separator />
-                    {clickButton !== 1 && people.length > 0 ? (
-                        <Button onClick={handleDrawPersonRandomly} className="bg-green-500 hover:bg-green-400 mt-5">
-                            <Dices /> Sortear
-                        </Button>
-                    ) : null}
                 </CardContent>
             </Card>
-            {clickButton === 1 ? (
-                <Card className="mb-10">
+            <div className="w-full h-full flex items-center justify-center mt-4 mb-4">
+                <Button onClick={handleDrawPersonRandomly} className="bg-green-500 hover:bg-green-400">
+                    <Dices /> Sortear
+                </Button>
+            </div>
+            {clickButton === 1 && randomList.length > 0 ? (
+                <Card>
                     <CardContent className="pt-5 w-full flex flex-col items-center">
+                        <h1 className="text-2xl font-semibold">Posição dos Sorteados</h1>
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -91,9 +97,7 @@ export function DrawResults({ people }: DrawResultsProps) {
                             </TableBody>
                         </Table>
                         <Separator />
-                        <Button onClick={handleDrawPersonRandomly} className="bg-green-500 hover:bg-green-400 mt-5">
-                            <Dices /> Sortear
-                        </Button>
+
                     </CardContent>
                 </Card>
             ) : null}
