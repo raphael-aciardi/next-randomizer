@@ -88,7 +88,7 @@ export async function drawPersonRandomly() {
     cookieStore.get("listPeople")?.value ?? "[]"
   ) as Person[];
   const randomList = currentList.sort(() => Math.random() - 0.5);
-  cookieStore.set("listPeople", JSON.stringify(randomList));
+  return randomList;
 }
 
 
