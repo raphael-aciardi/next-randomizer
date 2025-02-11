@@ -87,8 +87,13 @@ export async function drawPersonRandomly() {
   const currentList = JSON.parse(
     cookieStore.get("listPeople")?.value ?? "[]"
   ) as Person[];
-  const randomList = currentList.sort(() => Math.random() - 0.5);
-  return randomList;
+
+  for (let i = currentList.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [currentList[i], currentList[j]] = [currentList[j], currentList[i]];
+  }
+
+  return currentList;
 }
 
 
